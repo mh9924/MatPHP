@@ -143,9 +143,9 @@ class Matrix
 
     private function handleScalar($other){
         $x = $y = 0;
-        foreach ($this->mx as $row) {
+        for ($i=0;$i<$this->numcols;$i++) {
             $r = array();
-            foreach ($row as $element) {
+            for ($j=0;$j<$this->numcols;$j++) {
                 $r[] = $other * $this->mx[$x][$y];
                 $y++;
             }
