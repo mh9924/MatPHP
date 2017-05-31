@@ -3,7 +3,7 @@
  * @author    harrism
 */
 
-namespace MathTools;
+namespace MatPHP;
 
 
 class Matrix
