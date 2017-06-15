@@ -142,16 +142,15 @@ class Matrix
     }
 
     private function handleScalar($other){
-        $x = $y = 0;
+        $y = 0;
         for ($i=0;$i<$this->numcols;$i++) {
             $r = array();
             for ($j=0;$j<$this->numcols;$j++) {
-                $r[] = $other * $this->mx[$x][$y];
+                $r[] = $other * $this->mx[$i][$y];
                 $y++;
             }
             $matrix[] = $r;
             $y = 0;
-            $x++;
         }
         return new Matrix($matrix);
     }
