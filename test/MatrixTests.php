@@ -80,16 +80,15 @@ class MatrixTests
         $m7 = new Matrix([[3],
             [8]]);
 
-        $m8 = new Matrix([[3, 5, 9],
-            [1, 5, 2],
-            [6, 9, 1]]);
+        $m8 = new Matrix([[9, 11, 18],
+            [6, 9, 12],
+            [4, 1, 5]]);
 
-        "Convert to row-echelon and find determinant:";
+        echo "Convert to row-echelon and find determinant:";
 
         $m8->echoOut();
-        $det1 = $m8->findDeterminant();
+        $m8->invert();
         $m8->echoOut();
-        echo $det1;
 
         echo "Find sum, mean, covariance of a set of matrices:";
 

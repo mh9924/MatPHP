@@ -256,18 +256,62 @@ class Matrix
 
         $e = 1;
         $identity = $this->findIdentity();
+        $this->augment($identity);
+        $this->echoOut();
 
         for ($j = 0; $j < $this->numrows; $j++)
         {
+            // Find pivot index
+            $pivotIndex = $j;
 
+            for ($p = $j+1; $p < $this->numrows; $p++)
+                if (abs($this->mx[$p][$j]) > abs($this->mx[$pivotIndex][$j]))
+                    $pivotIndex = $p;
+
+            if ($this->mx[$pivotIndex][$j] == 0)
+                return 0;
+
+            if ($pivotIndex > $j) # Interchange rows
+            {
+                $temp = $this->mx[$pivotIndex];
+                $this->mx[$pivotIndex] = $this->mx[$j];
+                $this->mx[$j] = $temp;
+            }
+
+            $this->pivotAugmented($j, $j);
         }
+    }
+
+    private function pivotAugmented($a, $b)
+    {
+        for ($i = 0; $i < $this->numrows; $i++)
+        {
+            $factor = $this->mx[$i][$b] / $this->mx[$a][$b];
+
+            for ($j = 0; $j < $this->numcols; $j++)
+                if ($i != $a && $j != $b)
+                    $this->mx[$i][$j] -= $factor * $this->mx[$a][$j];
+        }
+
+        for ($i = 0; $i < $this->numrows; $i++)
+            if ($i != $a)
+                $this->mx[$i][$b] = 0;
+
+        for ($j = 0; $j < $this->numcols; $j++)
+            if ($j != $b)
+                $this->mx[$a][$j] /= $this->mx[$a][$b];
+
+        $this->mx[$a][$b] = 1;
     }
 
     public function augment($other)
     {
         for ($i = 0; $i < $this->numrows; $i++)
+        {
             for ($j = 0; $j < $other->numcols; $j++)
                 $this->mx[$i][] = $other->mx[$i][$j];
+            $this->numcols++;
+        }
     }
 
     public function echoOut()
