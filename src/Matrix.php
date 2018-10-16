@@ -243,7 +243,7 @@ class Matrix
             $det = pow(-1, $r);
 
             for ($rowNo = 0; $rowNo < $this->numrows; $rowNo++)
-                $det = $det * $this->mx[$rowNo][$rowNo];
+                $det *= $this->mx[$rowNo][$rowNo];
 
             return $det;
         }

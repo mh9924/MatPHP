@@ -9,7 +9,7 @@ include "../src/MatrixSet.php";
 
 class MatrixTests
 {
-    public function main(){
+    public function test1(){
 
         $m0 = new Matrix([[3,5],
             [8,2],
@@ -67,9 +67,10 @@ class MatrixTests
         echo "Transpose matrix:\n";
         $m1->findTranspose()->echoOut();
         $m2->findTranspose()->echoOut();
+    }
 
-        echo "Find sum, mean, covariance of a set of matrices:";
-
+    public function test2()
+    {
         $m5 = new Matrix([[3],
             [5]]);
 
@@ -78,6 +79,19 @@ class MatrixTests
 
         $m7 = new Matrix([[3],
             [8]]);
+
+        $m8 = new Matrix([[3, 5, 9],
+            [1, 5, 2],
+            [6, 9, 1]]);
+
+        "Convert to row-echelon and find determinant:";
+
+        $m8->echoOut();
+        $det1 = $m8->findDeterminant();
+        $m8->echoOut();
+        echo $det1;
+
+        echo "Find sum, mean, covariance of a set of matrices:";
 
         $ms = new MatrixSet([$m5, $m6, $m7]);
 
@@ -91,16 +105,11 @@ class MatrixTests
         $det = $covarianceMatrix->findDeterminant();
         $covarianceMatrix->echoOut();
 
-        $m0->echoOut();
-        $m1->echoOut();
-
-        $m0->augment($m1);
-        $m0->echoOut();
-
         echo $det;
     }
 }
 
 $t = new MatrixTests();
-$t->main();
+// $t->test1();
+$t->test2();
 ?>
