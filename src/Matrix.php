@@ -195,11 +195,6 @@ class Matrix
         return new Matrix($matrix);
     }
 
-    public function findRowEchelonForm()
-    {
-        #  Implement?
-    }
-
     public function findDeterminant()
     {
         if ($this->numcols != $this->numrows)
@@ -245,6 +240,20 @@ class Matrix
                 $det = $det * $this->mx[$rowNo][$rowNo];
 
             return $det;
+        }
+    }
+
+    public function invert()
+    {
+        if ($this->numcols != $this->numrows)
+            die("Matrix must be square to invert.");
+
+        $e = 1;
+        $identity = $this->findIdentity();
+
+        for ($j = 0; $j < $this->numrows; $j++)
+        {
+
         }
     }
 
