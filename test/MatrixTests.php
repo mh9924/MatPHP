@@ -5,7 +5,7 @@
 
 namespace MatPHP;
 
-include "../src/Matrices.php";
+include "../src/MatrixSet.php";
 
 class MatrixTests
 {
@@ -30,21 +30,6 @@ class MatrixTests
         $m4 = new Matrix([[7,8],
             [9,10],
             [11,12]]);
-
-        $m5 = new Matrix([[3, 5],
-            [8, 2],
-            [1, 6],
-            [5, 2]]);
-
-        $m6 = new Matrix([[7, 3],
-            [2, 5],
-            [6, 8],
-            [9, 0]]);
-
-        $m7 = new Matrix([[3, 8],
-            [1, 8],
-            [0, 5],
-            [2, 3]]);
 
         $m8 = new Matrix([[1, 2, -1, -4],
                         [2, 3, -1, -11],
@@ -83,13 +68,30 @@ class MatrixTests
         $m1->findTranspose()->echoOut();
         $m2->findTranspose()->echoOut();
 
-        echo "Find sum/mean of a set of matrices:";
-        $ms = new Matrices([$m5, $m6, $m7]);
+        echo "Find sum, mean, covariance of a set of matrices:";
+
+        $m5 = new Matrix([[3],
+            [5]]);
+
+        $m6 = new Matrix([[7],
+            [3]]);
+
+        $m7 = new Matrix([[3],
+            [8]]);
+
+        $ms = new MatrixSet([$m5, $m6, $m7]);
+
         $ms->findSum()->echoOut();
         $ms->findMean()->echoOut();
 
-        $sm1->findRowEchelonForm()->echoOut();
-        echo($sm1->findDeterminant());
+        $covarianceMatrix = $ms->findCovariance();
+
+        $covarianceMatrix->echoOut();
+
+        $det = $covarianceMatrix->findDeterminant();
+        $covarianceMatrix->echoOut();
+
+        echo $det;
     }
 }
 
