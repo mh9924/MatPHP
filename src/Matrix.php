@@ -148,6 +148,8 @@ class Matrix
 
     private function handleScalar($other)
     {
+        $matrix = [];
+
         for ($i=0; $i<$this->numrows; $i++)
         {
             $r = [];
@@ -168,6 +170,8 @@ class Matrix
 
     public function findIdentity()
     {
+        $matrix = [];
+
         if ($this->numrows == $this->numcols)
         {
             for ($i = 0; $i < $this->numrows; $i++)
@@ -186,6 +190,8 @@ class Matrix
 
     public function findTranspose()
     {
+        $matrix = [];
+
         for ($i = 0; $i < $this->numrows; $i++)
         {
             for ($j = 0; $j < $this->numcols; $j++)
@@ -255,6 +261,13 @@ class Matrix
         {
 
         }
+    }
+
+    public function augment($other)
+    {
+        for ($i = 0; $i < $this->numrows; $i++)
+            for ($j = 0; $j < $other->numcols; $j++)
+                $this->mx[$i][] = $other->mx[$i][$j];
     }
 
     public function echoOut()

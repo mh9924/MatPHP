@@ -91,6 +91,12 @@ class MatrixTests
         $det = $covarianceMatrix->findDeterminant();
         $covarianceMatrix->echoOut();
 
+        $m0->echoOut();
+        $m1->echoOut();
+
+        $m0->augment($m1);
+        $m0->echoOut();
+
         echo $det;
     }
 }
