@@ -80,7 +80,7 @@ class Matrix
         {
             if ($this->getDimensions() == $other->getDimensions() && $operation != "*")
                 return $this->handleAdditive($other, $operation);
-            elseif ($this->numcols == $other->numrows && $operation == "*")
+            elseif (sizeof($this->mx[0]) == sizeof($other->mx) && $operation == "*")
                 return $this->handleMultiplicative($other);
         }
         elseif (is_numeric($other) && $operation == "x")
@@ -173,6 +173,9 @@ class Matrix
 
     public function findTranspose()
     {
+        /* Finds the transpose of the matrix.
+        Returns a new matrix. */
+
         $matrix = [];
 
         for ($i = 0; $i < $this->numrows; $i++)
@@ -182,8 +185,14 @@ class Matrix
         return new Matrix($matrix);
     }
 
+
     public function findDeterminant()
     {
+        /* Finds the determinant of the matrix.
+        Note: Consequently converts the matrix to row-echelon form.
+        Returns a numeric value.
+        */
+
         if ($this->numcols != $this->numrows)
             die("Matrix must be square to find determinant.");
 
@@ -230,6 +239,21 @@ class Matrix
         }
     }
 
+    public function findConditionNumber()
+    {
+        $matrix = new Matrix($this->mx);
+        $inverseMatrix = new Matrix($this->mx);
+        $inverseMatrix->invert();
+
+        $matrix->normalize();
+        $inverseMatrix->normalize();
+
+        $maxRowSum = $matrix->findMaxRowSum();
+        $inverseMaxRowSum = $inverseMatrix->findMaxRowSum();
+
+        return $maxRowSum * $inverseMaxRowSum;
+    }
+
     public function invert()
     {
         if ($this->numcols != $this->numrows)
@@ -268,6 +292,23 @@ class Matrix
         }
     }
 
+    public function augment($other)
+    {
+        for ($i = 0; $i < $this->numrows; $i++)
+        {
+            for ($j = 0; $j < $other->numcols; $j++)
+                $this->mx[$i][] = $other->mx[$i][$j];
+            $this->numcols++;
+        }
+    }
+
+    public function normalize()
+    {
+        for ($i = 0; $i < sizeof($this->mx); $i++)
+            for ($j = 0; $j < sizeof($this->mx[0]); $j++)
+                $this->mx[$i][$j] = abs($this->mx[$i][$j]);
+    }
+
     private function pivotAugmented($a, $b)
     {
         for ($i = 0; $i < $this->numrows; $i++)
@@ -290,14 +331,19 @@ class Matrix
         $this->mx[$a][$b] = 1;
     }
 
-    public function augment($other)
+    private function findMaxRowSum()
     {
-        for ($i = 0; $i < $this->numrows; $i++)
+        $max = 0;
+
+        for ($i = 0; $i < sizeof($this->mx); $i++)
         {
-            for ($j = 0; $j < $other->numcols; $j++)
-                $this->mx[$i][] = $other->mx[$i][$j];
-            $this->numcols++;
+            $sum = array_sum($this->mx[$i]);
+
+            if ($sum > $max)
+                $max = $sum;
         }
+
+        return $max;
     }
 
     public function echoOut()

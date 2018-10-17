@@ -201,6 +201,60 @@ class MatrixTests
             }
         }
 
+        echo "\n\n";
+        echo "Tests for boundary plotting with epsilon error = 0.1:\n";
+
+        $testVector = [-1.2, 0.96];
+        $testClassification = $c->classify($testVector);
+        echo "g1: " . $testClassification[1][0] . "\n";
+        echo "g2: " . $testClassification[1][1] . "\n";
+        echo "|g1 - g2|: " . abs($testClassification[1][0] - $testClassification[1][1]) ."\n";
+
+        echo "\n\n";
+        echo "Solving a linear system\n";
+
+        $systemA = [
+            [0, 1, 3, -1, 1, 0, -1, -1],
+            [5, 0, 2, 0, -1, 3, 1, 1],
+            [2, -2, 2, -1, -1, 2, 3, 1],
+            [1, 1, 0, 3, 2, 1, -1, 0],
+            [4, 1, 2, 3, -2, 2, 2, 1],
+            [-1, -3, -2, 2, 0, 2, 4, 1],
+            [3, 5, -1, 1, 1, 3, 0, -2],
+            [1, 0, 1, 1, 0, 2, 2, 1]
+        ];
+
+        $systemB = [
+            [1],
+            [2],
+            [2],
+            [-2],
+            [1],
+            [7],
+            [14],
+            [6]
+        ];
+
+        $systemAMatrix = new Matrix($systemA);
+        $systemBMatrix = new Matrix($systemB);
+
+        $systemAMatrix->invert();
+
+        echo "(first find inverse of A):\n";
+        $systemAMatrix->echoOut();
+
+        echo "Multiply by nx1 RHS to get solution:\n";
+
+        $systemXMatrix = $systemAMatrix->mul($systemBMatrix);
+        $systemXMatrix->echoOut();
+
+        echo "Find condition number:\n";
+
+        $systemAMatrix = new Matrix($systemA);
+        echo $systemAMatrix->findConditionNumber();
+
+        $systemAMatrix = new Matrix($systemA);
+        echo $systemAMatrix->findDeterminant();
 
     }
 }
