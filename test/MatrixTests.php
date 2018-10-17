@@ -167,6 +167,41 @@ class MatrixTests
         echo "m2 was classed as Class " . $classification2;
         echo " because g1(...) = {$result2[1][0]} and g2(...) = {$result2[1][1]}";
 
+        /* Evaluate the discriminant for the
+        sample data that was used to train. */
+
+        echo "\n\n";
+        echo "Class 1 classifications (" . sizeof($vectorSets[0]) . " vectors):\n";
+
+        for ($i = 0; $i < sizeof($vectorSets[0]); $i++)
+        {
+            $classification = $c->classify($vectorSets[0][$i]);
+            if ($classification[0] == 2)
+            {
+                $vector = $vectorSets[0][$i];
+                echo "[{$vector[0]}, {$vector[1]}] was classed incorrectly.\n";
+                echo "Value of g1: {$classification[1][0]}\n";
+                echo "Value of g2: {$classification[1][1]}\n";
+                echo "\n";
+            }
+        }
+
+        echo "Class 2 classifications (" . sizeof($vectorSets[1]) . " vectors):\n";
+
+        for ($i = 0; $i < sizeof($vectorSets[1]); $i++)
+        {
+            $classification = $c->classify($vectorSets[1][$i]);
+            if ($classification[0] == 1)
+            {
+                $vector = $vectorSets[1][$i];
+                echo "[{$vector[0]}, {$vector[1]}] was classed incorrectly.\n";
+                echo "Value of g1: {$classification[1][0]}\n";
+                echo "Value of g2: {$classification[1][1]}\n";
+                echo "\n";
+            }
+        }
+
+
     }
 }
 
