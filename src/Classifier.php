@@ -59,10 +59,10 @@ class Classifier
         $discriminant2 = $firstFactor->mx[0][0] - $secondFactor;
 
         if ($discriminant1 > $discriminant2)
-            return 1;
+            return [1, [$discriminant1, $discriminant2]];
 
         if ($discriminant2 > $discriminant1)
-            return 2;
+            return [2, [$discriminant1, $discriminant2]];
     }
 
     public function train(array $class1Vectors, array $class2Vectors)

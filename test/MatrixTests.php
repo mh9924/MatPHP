@@ -155,7 +155,17 @@ class MatrixTests
         $c->class1Inverse->echoOut();
         $c->class2Inverse->echoOut();
 
-        echo $c->classify([-0.32412683001818, -0.88570603142727]);
+        $result1 = $c->classify([-1.8925273441455, 2.1188537162636]);
+        $result2 = $c->classify([-0.32412683001818, -0.88570603142727]);
+
+        $classification1 = $result1[0];
+        $classification2 = $result2[0];
+
+        echo "m1 was classed as Class " . $classification1;
+        echo " because g1(...) = {$result1[1][0]} and g2(...) = {$result1[1][1]}";
+        echo "\n";
+        echo "m2 was classed as Class " . $classification2;
+        echo " because g1(...) = {$result2[1][0]} and g2(...) = {$result2[1][1]}";
 
     }
 }
