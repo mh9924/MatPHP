@@ -6,10 +6,14 @@
 namespace MatPHP;
 
 include "../src/MatrixSet.php";
+include "../src/Classifier.php";
 
 class MatrixTests
 {
     public function test1(){
+
+        /* Tests of basic matrix arithmetic and finding scalar, identity,
+        and transpose matrix. */
 
         $m0 = new Matrix([[3,5],
             [8,2],
@@ -71,6 +75,9 @@ class MatrixTests
 
     public function test2()
     {
+        /* Tests of inverting, finding determinant (converts to row-echelon consequently),
+        and finding sum, mean, covariance of a set of vectors. */
+
         $m5 = new Matrix([[3],
             [5]]);
 
@@ -84,11 +91,23 @@ class MatrixTests
             [6, 9, 12],
             [4, 1, 5]]);
 
-        echo "Convert to row-echelon and find determinant:";
-
         $m8->echoOut();
+
+        echo "^ Inverted:";
+
         $m8->invert();
         $m8->echoOut();
+
+        $m8 = new Matrix([[1, 2],
+            [4,3]]);
+
+        $m8->echoOut();
+
+        echo "^ Row echelon form / Determinant:";
+
+        $det = $m8->findDeterminant();
+        $m8->echoOut();
+        echo $det;
 
         echo "Find sum, mean, covariance of a set of matrices:";
 
@@ -106,9 +125,43 @@ class MatrixTests
 
         echo $det;
     }
+
+    public function test3()
+    {
+        /* Test our classifier on sample data.
+        Solve linear equations using Gauss-Jordan elimination. */
+
+        $c = new Classifier();
+        $vectorSets = $c->fromTextFile("data1.txt");
+        $c->train($vectorSets[0], $vectorSets[1]);
+
+        echo "Class 1, class 2 mean vectors:\n";
+
+        $c->class1Mean->echoOut();
+        $c->class2Mean->echoOut();
+
+        echo "Class 1, class 2 covariance matrices:\n";
+
+        $c->class1Covariance->echoOut();
+        $c->class2Covariance->echoOut();
+
+        echo "Class 1, class 2 determinants:\n";
+
+        echo $c->class1Determinant . "\n";
+        echo $c->class2Determinant . "\n";
+
+        echo "Class 1, class 2 inverses:\n";
+
+        $c->class1Inverse->echoOut();
+        $c->class2Inverse->echoOut();
+
+        echo $c->classify([-0.32412683001818, -0.88570603142727]);
+
+    }
 }
 
 $t = new MatrixTests();
 // $t->test1();
-$t->test2();
+// $t->test2();
+$t->test3();
 ?>

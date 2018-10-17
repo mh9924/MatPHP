@@ -8,9 +8,7 @@ namespace MatPHP;
 
 class Matrix
 {
-    private $mx = array();
-    private $numcols = 0;
-    private $numrows = 0;
+    public $mx = array();
     private $size = 0;
 
     public function __construct($matrix)
@@ -43,12 +41,12 @@ class Matrix
 
     public function getNumRows()
     {
-        return $this->numrows;
+        return sizeof($this->mx);
     }
 
     public function getNumCols()
     {
-        return $this->numcols;
+        return sizeof($this->mx[0]);
     }
 
     public function getDimensions()
@@ -121,27 +119,12 @@ class Matrix
 
     private function handleMultiplicative($other)
     {
-        foreach ($this->mx as $row)
-        {
-            $r = [];
+        $matrix = [];
 
-            for ($i=0; $i<$other->numcols; $i++)
-            {
-                $sum = 0;
-                $x = 0;
-
-                foreach ($row as $element)
-                {
-                    $dot = $element * $other->mx[$x][$i];
-                    $sum = $sum + $dot;
-                    $x++;
-                }
-
-                $r[] = $sum;
-            }
-
-            $matrix[] = $r;
-        }
+        for ($i = 0; $i < sizeof($this->mx); $i++)
+            for ($j = 0; $j < sizeof($other->mx[0]); $j++)
+                for ($k = 0; $k < sizeof($other->mx); $k++)
+                    $matrix[$i][$j] += $this->mx[$i][$k] * $other->mx[$k][$j];
 
         return new Matrix($matrix);
     }
@@ -193,10 +176,8 @@ class Matrix
         $matrix = [];
 
         for ($i = 0; $i < $this->numrows; $i++)
-        {
             for ($j = 0; $j < $this->numcols; $j++)
                 $matrix[$j][$i] = $this->mx[$i][$j];
-        }
 
         return new Matrix($matrix);
     }
@@ -257,7 +238,6 @@ class Matrix
         $e = 1;
         $identity = $this->findIdentity();
         $this->augment($identity);
-        $this->echoOut();
 
         for ($j = 0; $j < $this->numrows; $j++)
         {
@@ -279,6 +259,12 @@ class Matrix
             }
 
             $this->pivotAugmented($j, $j);
+        }
+
+        foreach ($this->mx as &$row)
+        {
+            for ($i = 0; $i < $this->numcols / 2; $i++)
+                array_shift($row);
         }
     }
 
