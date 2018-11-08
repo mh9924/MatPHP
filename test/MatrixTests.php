@@ -257,10 +257,75 @@ class MatrixTests
         echo $systemAMatrix->findDeterminant();
 
     }
+
+    public function test4()
+    {
+
+        $matrixSet = MatrixSet::vectorsFromTextFile("data2.txt");
+
+        echo "Mean of vectors: ";
+
+        $matrixSet->findMean()->echoOut();
+
+        echo "Covariance of vectors: ";
+
+        $covariance = $matrixSet->findCovariance();
+        $covariance->echoOut();
+
+        echo "Trace of covariance matrix: ";
+
+        $trace = $covariance->findTrace();
+        echo $trace;
+
+        echo "\n";
+        echo "Determinant of covariance matrix: ";
+
+        $det = $covariance->findDeterminant();
+        echo $det;
+
+        $covariance = $matrixSet->findCovariance();
+
+        echo "\n";
+        echo "Eigenvalues of covariance matrix: ";
+
+        $e1 = $trace / 2 + sqrt($trace**2 / 4 - $det);
+
+        $e2 = $trace / 2 - sqrt($trace**2 / 4 - $det);
+
+        echo "{$e1} {$e2}";
+
+        echo "\n";
+        echo "Eigenvectors: ";
+
+        $e3x = 1 / sqrt(1 + (($e1 - $covariance->mx[0][0]) / $covariance->mx[0][1])**2 );
+        $e3y = (($e1 - $covariance->mx[0][0]) / $covariance->mx[0][1]) / sqrt(1 + (($e1 - $covariance->mx[0][0]) / $covariance->mx[0][1])**2);
+
+        $e4x = 1 / sqrt(1 + (($e2 - $covariance->mx[0][0]) / $covariance->mx[0][1])**2 );
+        $e4y = (($e2 - $covariance->mx[0][0]) / $covariance->mx[0][1]) / sqrt(1 + (($e2 - $covariance->mx[0][0]) / $covariance->mx[0][1])**2);
+
+
+        echo "\n";
+        echo "{$e3x} {$e3y}";
+        echo "\n\n";
+        echo "{$e4x} {$e4y}";
+
+        $px = new Matrix([
+            [0, 0, 0, 0, 728/3],
+            [1, 0, 0, 0, -758/3],
+            [0, 1, 0, 0, -190],
+            [0, 0, 1, 0, 161/6],
+            [0, 0, 0, 1, 73/6]]);
+
+        $px->findCharacteristicCoefficients();
+        $px->echoOut();
+
+
+    }
 }
 
 $t = new MatrixTests();
 // $t->test1();
 // $t->test2();
-$t->test3();
+// $t->test3();
+$t->test4();
 ?>

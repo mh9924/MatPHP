@@ -8,7 +8,7 @@ require_once "Matrix.php";
 
 class MatrixSet
 {
-    private $mxs = array();
+    public $mxs = array();
 
     public function __construct($matrices = [])
     {
@@ -54,6 +54,31 @@ class MatrixSet
         }
 
         return $productSet->findMean();
+    }
+
+    public static function vectorsFromTextFile($filename)
+    {
+        $matrixSet = [];
+
+        $data = file_get_contents(__DIR__ . "/../sampledata/{$filename}");
+
+        $lines = explode("\r", $data);
+
+        for ($i = 0; $i < sizeof($lines); $i++)
+        {
+            $vectors = explode("\t", $lines[$i]);
+
+            $matrix = [];
+
+            for ($j = 0; $j < sizeof($vectors); $j++)
+            {
+                $matrix[] = [$vectors[$j]];
+            }
+
+            $matrixSet[] = new Matrix($matrix);
+        }
+
+        return new MatrixSet($matrixSet);
     }
 
 }

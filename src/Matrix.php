@@ -171,6 +171,20 @@ class Matrix
         die("Matrix must be square to get identity.");
     }
 
+    public function findTrace()
+    {
+        if ($this->numrows == $this->numcols) {
+            $sum = 0;
+
+            for ($i = 0; $i < $this->numrows; $i++)
+                $sum += $this->mx[$i][$i];
+
+            return $sum;
+        }
+
+        die("Matrix must be square to get trace.");
+    }
+
     public function findTranspose()
     {
         /* Finds the transpose of the matrix.
@@ -237,6 +251,32 @@ class Matrix
 
             return $det;
         }
+    }
+
+    public function findCharacteristicCoefficients()
+    {
+        $matrix = new Matrix($this->mx);
+        $negTrace = -($matrix->findTrace());
+
+        echo "\n";
+        echo "x^" . sizeof($this->mx[0]) . " " . $negTrace . "X^" . (sizeof($this->mx[0])-1) . " ";
+
+        for ($k = sizeof($matrix->mx)-1; $k >= 1; $k--)
+        {
+            $identity = $matrix->findIdentity();
+
+            for ($i = 0; $i < sizeof($matrix->mx); $i++)
+                $identity->mx[$i][$i] *= $negTrace;
+
+            $matrixPlusIdentity = $matrix->add($identity);
+            $matrix = $this->mul($matrixPlusIdentity);
+
+            $negTrace = -($matrix->findTrace() / (sizeof($this->mx) - $k + 1));
+
+            echo " + " . $negTrace . "X^" . ($k - 1) . " ";
+        }
+
+        echo "\n";
     }
 
     public function findConditionNumber()
