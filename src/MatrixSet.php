@@ -9,6 +9,7 @@ require_once "Matrix.php";
 class MatrixSet
 {
     public $mxs = array();
+    public $fitness = 0;
 
     public function __construct($matrices = [])
     {
@@ -54,6 +55,32 @@ class MatrixSet
         }
 
         return $productSet->findMean();
+    }
+
+    public function findTotalDistance($roundTrip = false)
+    {
+        $totalDistance = 0;
+
+        for ($m = 0; $m < sizeof($this->mxs) - 2; $m++)
+            $totalDistance += $this->mxs[$m]->distance($this->mxs[$m + 1]);
+
+        if ($roundTrip)
+            $totalDistance += $this->mxs[$m]->distance($this->mxs[0]);
+
+        return $totalDistance;
+    }
+
+    public function getFitness()
+    {
+        if ($this->fitness == 0)
+            $this->fitness = 1/$this->findTotalDistance();
+
+        return $this->fitness;
+    }
+
+    public static function createIndividual($cities)
+    {
+
     }
 
     public static function vectorsFromTextFile($filename)

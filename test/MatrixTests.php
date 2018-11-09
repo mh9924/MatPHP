@@ -5,6 +5,8 @@
 
 namespace MatPHP;
 
+ini_set('memory_limit', -1);
+
 include "../src/MatrixSet.php";
 include "../src/Classifier.php";
 
@@ -310,15 +312,60 @@ class MatrixTests
         echo "{$e4x} {$e4y}";
 
         $px = new Matrix([
-            [0, 0, 0, 0, 728/3],
-            [1, 0, 0, 0, -758/3],
+            [0, 0, 0, 0, 242.66667],
+            [1, 0, 0, 0, -252.66667],
             [0, 1, 0, 0, -190],
-            [0, 0, 1, 0, 161/6],
-            [0, 0, 0, 1, 73/6]]);
+            [0, 0, 1, 0, 26.83333],
+            [0, 0, 0, 1, 12.16667]]);
 
-        $px->findCharacteristicCoefficients();
-        $px->echoOut();
+        echo "\n\n";
+        echo "Monic polynomial's characteristic equation: ";
+        echo $px->findCharacteristicEquation();
 
+        $firstDeflatedPx = new Matrix([
+            [0, 0, 0, -131.57993],
+            [1, 0, 0, 8.65726],
+            [0, 1, 0, 57.14985],
+            [0, 0, 1, -0.66931]
+        ]);
+
+        echo "\n\n";
+        echo "Deflated p(n) characteristic equation: ";
+        echo $firstDeflatedPx->findCharacteristicEquation();
+
+        $secondDeflatedPx = new Matrix([
+            [0, 0, 0, 54.43163],
+            [1, 0, 0, -118.54869],
+            [0, 1, 0, 54.98005],
+            [0, 0, 1, 1.61795]
+        ]);
+
+        echo "\n\n";
+        echo "Deflated p(n) characteristic equation: ";
+        echo $secondDeflatedPx->findCharacteristicEquation();
+
+        $thirdDeflatedPx = new Matrix([
+            [0, 0, 0, 11.47257],
+            [1, 0, 0, -0.70992],
+            [0, 1, 0, -1.32921],
+            [0, 0, 1, 7.67639]
+        ]);
+
+        echo "\n\n";
+        echo "Deflated p(n) characteristic equation: ";
+        echo $thirdDeflatedPx->findCharacteristicEquation();
+
+        echo "\n\n";
+        echo "Est largest eigenvalue for each matrix: ";
+        echo "\n";
+        echo $px->findLargestEigenvalue();
+        echo "\n";
+        echo $firstDeflatedPx->findLargestEigenvalue();
+        echo "\n";
+        echo $secondDeflatedPx->findLargestEigenvalue();
+        echo "\n";
+        echo $thirdDeflatedPx->findLargestEigenvalue();
+        echo "\n";
 
     }
 }
@@ -327,5 +374,5 @@ $t = new MatrixTests();
 // $t->test1();
 // $t->test2();
 // $t->test3();
-$t->test4();
+// $t->test4();
 ?>

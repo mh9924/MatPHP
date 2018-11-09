@@ -151,6 +151,22 @@ class Matrix
         return new Matrix($matrix);
     }
 
+    public function distance($other)
+    {
+        if ((sizeof($this->mx) != 2 && sizeof($this->mx) != 3) || sizeof($this->mx[0]) != 1)
+            die("First matrix must be 2d or 3d vector to find distance.");
+
+        if ((sizeof($other->mx) != 2 && sizeof($other->mx) != 3) || sizeof($other->mx[0]) != 1)
+            die("Second matrix must be 2d or 3d vector to find distance.");
+
+
+        if (sizeof($this->mx) != sizeof($other->mx))
+            die("Cannot find distance between a 2d vector and 3d vector. Both must be 2d OR 3d.");
+
+        if (sizeof($this->mx) == 2)
+            return sqrt(($other->mx[0][0] - $this->mx[0][0])**2 + ($other->mx[1][0] - $this->mx[1][0])**2);
+    }
+
     public function findIdentity()
     {
         $matrix = [];
@@ -253,13 +269,15 @@ class Matrix
         }
     }
 
-    public function findCharacteristicCoefficients()
+    public function findCharacteristicEquation()
     {
         $matrix = new Matrix($this->mx);
         $negTrace = -($matrix->findTrace());
 
+        $characteristicEquation = "";
+
         echo "\n";
-        echo "x^" . sizeof($this->mx[0]) . " " . $negTrace . "X^" . (sizeof($this->mx[0])-1) . " ";
+        $characteristicEquation .= "x^" . sizeof($this->mx[0]) . " + " . $negTrace . "x^" . (sizeof($this->mx[0])-1) . " ";
 
         for ($k = sizeof($matrix->mx)-1; $k >= 1; $k--)
         {
@@ -273,10 +291,10 @@ class Matrix
 
             $negTrace = -($matrix->findTrace() / (sizeof($this->mx) - $k + 1));
 
-            echo " + " . $negTrace . "X^" . ($k - 1) . " ";
+            $characteristicEquation .= " + " . $negTrace . (($k - 1 == 0 ? "" : "x^" . ($k - 1))) . " ";
         }
 
-        echo "\n";
+        return $characteristicEquation;
     }
 
     public function findConditionNumber()
@@ -292,6 +310,60 @@ class Matrix
         $inverseMaxRowSum = $inverseMatrix->findMaxRowSum();
 
         return $maxRowSum * $inverseMaxRowSum;
+    }
+
+    public function findLargestEigenvalue()
+    {
+        $matrix = new Matrix($this->mx);
+
+        $epsilon = 1.0e-15;
+        $m = 50;
+        $i = 0;
+
+        $vector = [];
+
+        for ($j = 0; $j < sizeof($matrix->mx); $j++)
+            $vector[$j][0] = 2;
+
+        $y = new Matrix($vector);
+        $x = $matrix->mul($y);
+
+        $sum = 0;
+
+        do {
+            for ($j = 0; $j < sizeof($matrix->mx); $j++)
+                $sum += $vector[$j][0] ** 2;
+
+            $normalized = sqrt($sum);
+
+            for ($j = 0; $j < sizeof($matrix->mx); $j++)
+                $x->mx[$j][0] /= $normalized;
+
+            $y = $x;
+
+            $x = $matrix->mul($y);
+            $yt = $y->findTranspose();
+
+            $numerator = $yt->mul($x);
+            $denominator = $yt->mul($y);
+
+            $u = $numerator->mx[0][0] / $denominator->mx[0][0];
+
+            for ($j = 0; $j < sizeof($matrix->mx); $j++)
+                $y->mx[$j][0] *= $u;
+
+            $r = $y->sub($x);
+
+            $sum2 = 0;
+
+            for ($j = 0; $j < sizeof($matrix->mx); $j++)
+                $sum2 += $r->mx[$j][0] ** 2;
+
+            $normalized2 = sqrt($sum2);
+            $i++;
+        } while ($normalized2 > $epsilon && $i < $m);
+
+        return $u;
     }
 
     public function invert()
